@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 // # @WebMvcTest
 // 스프링 MVC 애플리케이션의 형태로 테스트가 실행된도록 한다. 또한 스프링 지원을 설정한다.
-@WebMvcTest(HomeController.class) // HomeController 웹 페이지 테스트
+@WebMvcTest // HomeController 웹 페이지 테스트
 public class HomeControllerTest {
 
 	// 실제 서버를 시작하는 대신 스프링 MVC의 모의(Mocking) 매커니즘을 사용
