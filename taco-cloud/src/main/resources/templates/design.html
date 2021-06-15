@@ -71,6 +71,7 @@
 		<div>
 			<h3>Name your taco creation:</h3>
 			
+			<!-- th:field 로 id 와 name 에 각각 name을 써주는걸 대체 -->
 			<input type="text" th:field="*{name}" />  
 			<span
 				class="validationError" th:if="${#fields.hasErrors('name')}"
