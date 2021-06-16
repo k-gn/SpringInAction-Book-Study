@@ -23,7 +23,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Taco Order")
+@Table(name = "Taco_Order")
 // 도메인 객체에 Serializable 인터페이스 클래스를 구현하기(implements) 해야지
 // 정상적으로 세션에 저장하고 꺼내올수 있다.
 public class Order implements Serializable {

@@ -1,8 +1,36 @@
 package tacos.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-public class SecurityConfig {
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+			.authorizeRequests()
+				.antMatchers("/design", "/orders")
+					.access("hasRole('ROLE_USER')")
+				.antMatchers("/", "/**")
+					.access("permitAll")
+			.and()
+				.httpBasic(); //  Basic Authentication을 사용 (요청해더에 username, password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증)
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.inMemoryAuthentication()
+			.withUser("user1")
+			.password("{noop}password1")
+			.authorities("ROLE_USER")
+			.and()
+			.withUser("user2")
+			.password("{noop}password2")
+			.authorities("ROLE_USER");
+	}
 }
