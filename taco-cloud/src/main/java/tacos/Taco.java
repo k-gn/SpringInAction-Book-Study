@@ -20,6 +20,6 @@ public class Taco {
 	private String name;
 	
 	@Size(min=1, message="You must choose at least 1 ingredient")
-	private List<Ingredient> ingredients;
+	private List<Ingredient> ingredients; // Converter 를 통해서 id 값이 Ingredient 로 변환된다.
 
 }

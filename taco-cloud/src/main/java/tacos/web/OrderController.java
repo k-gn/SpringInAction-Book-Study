@@ -3,7 +3,6 @@ package tacos.web;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +18,7 @@ import tacos.data.OrderRepository;
 @Slf4j
 @Controller
 @RequestMapping("/orders")
-@SessionAttributes("order")
+@SessionAttributes("order") // 세션 order 사용
 @RequiredArgsConstructor
 public class OrderController {
 	
@@ -36,7 +35,10 @@ public class OrderController {
 			return "orderForm";
 		}
 		
+		log.info("order : " + order);
 		orderRepository.save(order);
+		// @SessionAttributes를 사용해 세션에 저장한 모델이 더 이상 필요없어질 경우 세션에서 제거해줘야 한다.
+		// 세션의 제거는 SessionStatus 오브젝트의 setComplete 메서드로 제거
 		sessionStatus.setComplete();
 		
 		log.info("Order submit : " + order);

@@ -28,6 +28,12 @@ import tacos.data.TacoRepository;
 @RequestMapping("/design")
 @Slf4j
 @RequiredArgsConstructor
+// 모델정보 중에서 @SessionAttributes에 지정한 이름에 동일한 것이 있으면 이를 세션에 저장
+// @ModelAttribute 애노테이션이 있을 때 전달할 오브젝트를 세션에서 가져오는 것
+// 원래는 파라미터에 @ModelAttribute가 있으면 새 오브젝트를 생성한 뒤 HTTP 요청 파라미터를 바인딩한다.
+// 하지만 @SessionAttributes를 사용했을 경우는 다르다.
+// 새 오브젝트를 생성하기 전 @SessionAttributes에 지정된 이름과 @ModelAttribute 파라미터의 이름을 비교하여 
+// 동일할 경우 오브젝트를 새로 생성하지 않고 세션에 있는 오브젝트를 사용
 @SessionAttributes("order") // 다수의 타코를 하나의 주문으로 처리하기 위해 세션영역으로 관리
 public class DesignTacoController {
 
@@ -57,9 +63,9 @@ public class DesignTacoController {
 		// 각 타입값을 배열로 생성 (WRAP, PROTEIN , ...)
 		Type[] types = Ingredient.Type.values();
 		for (Type type : types) {
-			log.info("=======================");
-			log.info(type.toString());
-			log.info(filterByType(ingredients, type).toString());
+//			log.info("=======================");
+//			log.info(type.toString());
+//			log.info(filterByType(ingredients, type).toString());
 			
 			model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
 		}
@@ -77,11 +83,13 @@ public class DesignTacoController {
 	// 해당 객체를 미리 모델에 생성
 	@ModelAttribute(name = "order")
 	public Order order() {
+		log.info("new order");
 		return new Order();
 	}
 	
 	@ModelAttribute(name = "taco")
 	public Taco taco() {
+		log.info("new taco");
 		return new Taco();
 	}
 	
@@ -92,12 +100,11 @@ public class DesignTacoController {
 		if(errors.hasErrors()) {
 			return "design";
 		}
-		
 		log.info("processDesign : " + design);
 		
 		Taco saved = tacoRepository.save(design);
 		order.addDesign(saved);
-		
+		log.info("order : " + order);
 		return "redirect:/orders/current";
 	}
 }
