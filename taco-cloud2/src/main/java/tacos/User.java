@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
 @RequiredArgsConstructor
+// UserDetails 타입으로 시큐리티는 사용자 인증 객체(Principal)를 저장한다.
+// UserServiceDetail 에서 리턴한 UserDetails 는 시큐리티 인증영역에 저장된다.
 public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	
@@ -36,6 +38,7 @@ public class User implements UserDetails {
 	private final String zip;
 	private final String phoneNumber;
 	
+	// 보통 권한 테이블이 따로 있다. (한 사람당 여러 권한을 가질 수 있고, 각자 권한이 다름)
 	@Override
 	public Collection<? extends
 			GrantedAuthority> getAuthorities() {

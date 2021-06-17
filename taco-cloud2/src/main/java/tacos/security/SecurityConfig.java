@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
+	// 스프링 부트는 자동으로 설정한 DB에 대한 DataSource 빈을 구성해준다.
+	// JavaConfig 클래스로 dataSource 빈 생성을 하지 않아도 예약된 키에 프로퍼티 설정을 하면 자동으로 jpa 설정과 dataSource 빈을 구성해준다
+	// 내장 DB는 아예 자동으로 되고 그 외 DB는 yml이나 properties 파일에 datasource를 설정해야한다.  yml이나 properties 파일에 설정 안하면 @bean으로 만들어줘야 함
 	@Autowired
     DataSource dataSource;
 	
@@ -35,14 +38,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/design", "/orders").hasRole("USER")
 				.antMatchers("/", "/**").permitAll()
 			.and()
-				.httpBasic(); //  Basic Authentication을 사용 (요청해더에 username, password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증)
+//				.httpBasic(); //  Basic Authentication을 사용 (요청해더에 username, password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증)
+				.formLogin()
+					.loginPage("/login") // 커스텀 로그인 페이지 요청url
+			.and()
+				.logout()
+					.logoutSuccessUrl("/")
+			.and()
+				.csrf();
 	}
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception { // 사용자 인증 정보를 구성하는 메서드
 		
 		auth
-			.userDetailsService(userDetailsService)
+			.userDetailsService(userDetailsService) // 커스텀 사용자 스토어
 			.passwordEncoder(encoder());
 		
 		
@@ -65,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			auth
 				.jdbcAuthentication()
 				.dataSource(dataSource)
-//				.usersByUsernameQuery( // 없어도 기본적으로 시큐리티가 생성하는 SQL을 사용한다.
+//				.usersByUsernameQuery( // 없어도 기본적으로 시큐리티가 생성하는 SELECT SQL을 사용한다. (사용자와 권한 테이블 자체는 직접 만들어야한다)
 //					"select username, password, enabled from users " +
 //					"where username=?")
 //				.authoritiesByUsernameQuery(

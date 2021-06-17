@@ -12,5 +12,11 @@
   		- 정적인 콘텐츠는 static 폴더에 위치해야 한다.
    -->
   <img th:src="@{/images/TacoCloud.png}"/>
+  
+  <form method="POST" th:action="@{/logout}" id="logoutForm">
+	<input type="submit" value="Logout"/>
+  </form>
+  
+  <a th:href="@{/design}" id="design">Design a taco</a>
 </body>
 </html>
