@@ -92,10 +92,17 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor 
-				- @ConfigurationProperties 로 지정한 클래스에 대한 메타데이터를 생성하는 처리기 -->
+			- @ConfigurationProperties 로 지정한 클래스에 대한 메타데이터를 생성하는 처리기 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-hateoas -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
 			<version>2.5.1</version>
 		</dependency>
 
