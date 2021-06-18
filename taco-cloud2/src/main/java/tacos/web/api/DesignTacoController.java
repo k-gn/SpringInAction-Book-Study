@@ -1,9 +1,14 @@
 package tacos.web.api;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.EntityLinks;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tacos.Taco;
 import tacos.data.TacoRepository;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController("designApiTacoController")
 @RequestMapping(path = "/design", produces = "application/json")
@@ -28,17 +34,23 @@ import tacos.data.TacoRepository;
 public class DesignTacoController {
 
 	private final TacoRepository tacoRepo;
-//	private final EntityLinks entityLinks;
+	private final EntityLinks entityLinks;
 
-	@GetMapping("/recent")
-	public Iterable<Taco> recentTacos() {
+	@GetMapping("/recent") 	
+	public CollectionModel<TacoResource> recentTacos() {
+//		EntityModel<Taco>
+//		CollectionModel<Taco>
 		PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
-		return tacoRepo.findAll(page).getContent();
+		
+		List<Taco> tacos = tacoRepo.findAll(page).getContent();
+		CollectionModel<TacoResource> recentResources = new TacoResourceAssembler().toCollectionModel(tacos);
+		recentResources.add(WebMvcLinkBuilder.linkTo(DesignTacoController.class).slash("recent").withRel("recents")); // 관련 경로 추가
+//		recentResources.add(linkTo(methodOn(DesignTacoController.class).recentTacos()).withRel("recents")); // 관련 경로 추가
+		return recentResources;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
-
 		Optional<Taco> optTaco = tacoRepo.findById(id);
 		if (optTaco.isPresent()) {
 			return new ResponseEntity<>(optTaco.get(), HttpStatus.OK);
