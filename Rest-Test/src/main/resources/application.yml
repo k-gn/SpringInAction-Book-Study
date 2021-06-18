@@ -2,3 +2,8 @@ spring:
   h2:
     console:
       enabled: true
+  jpa:
+    database-platform: H2
+    show-sql: true
+    hibernate:
+      ddl-auto: create
