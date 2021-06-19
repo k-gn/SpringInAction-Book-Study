@@ -21,7 +21,7 @@ public class AnimationApiController {
 	private final AnimationRepository aniRepo;
 	
 	@GetMapping("/")
-	public List<Animation> aniAll() {
+	public List<Animation> allAni() {
 		
 		return null;
 	}
