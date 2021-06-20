@@ -1,6 +1,7 @@
 package restTest.ani.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,13 +25,17 @@ public class AnimationApiController {
 	
 	@GetMapping("/")
 	public List<Animation> allAni() {
-		aniRepo.findAll();
-		return null;
+		List<Animation> aniList = aniRepo.findAll();
+		return aniList;
 	}
 	
 	@GetMapping("/{id}")
 	public Animation getAni(@PathVariable Long id) {
-		aniRepo.findById(id);
+		Optional<Animation> result = aniRepo.findById(id);
+		if(result.isPresent()) {
+			Animation ani = result.get();
+			return ani;
+		}
 		return null;
 	}
 	
