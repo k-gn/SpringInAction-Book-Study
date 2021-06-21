@@ -1,5 +1,6 @@
 package restTest.ani.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -27,5 +28,10 @@ public class Company {
 	private String name;
 	
 	@OneToMany(mappedBy = "company")
-	private List<Animation> aniList;
+	@Builder.Default
+	private List<Animation> aniList = new ArrayList<>();
+	
+	public void addList(Animation ani) {
+		aniList.add(ani);
+	}
 }
