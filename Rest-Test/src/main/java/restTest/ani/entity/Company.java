@@ -9,10 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -29,6 +32,8 @@ public class Company {
 	
 	@OneToMany(mappedBy = "company")
 	@Builder.Default
+	@ToString.Exclude
+	@JsonIgnoreProperties("company")
 	private List<Animation> aniList = new ArrayList<>();
 	
 	public void addList(Animation ani) {
