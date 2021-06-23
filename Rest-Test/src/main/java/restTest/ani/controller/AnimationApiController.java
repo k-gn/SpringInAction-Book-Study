@@ -2,7 +2,12 @@ package restTest.ani.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,18 +28,31 @@ public class AnimationApiController {
 	
 	private final AnimationRepository aniRepo;
 	
-	@GetMapping("/")
-	public List<Animation> allAni() {
+	@GetMapping
+	public CollectionModel<EntityModel<Animation>> allAni() {
 		List<Animation> aniList = aniRepo.findAll();
-		return aniList;
+		List<EntityModel<Animation>> modelList = aniList.stream().map(ani -> EntityModel.of(ani, 
+				WebMvcLinkBuilder.linkTo(AnimationApiController.class).slash(ani.getId()).withRel("getAni"), 
+				WebMvcLinkBuilder.linkTo(AnimationApiController.class).slash(ani.getId()).withRel("updateAni"), 
+				WebMvcLinkBuilder.linkTo(AnimationApiController.class).slash(ani.getId()).withRel("deleteAni"))).collect(Collectors.toList());
+		
+		CollectionModel<EntityModel<Animation>>  hateoasList 
+			= CollectionModel.of(modelList, WebMvcLinkBuilder.linkTo(AnimationApiController.class).withSelfRel());
+		return hateoasList;
 	}
 	
 	@GetMapping("/{id}")
-	public Animation getAni(@PathVariable Long id) {
+	public EntityModel<Animation> getAni(@PathVariable Long id) {
+		System.out.println("getAni : " + id);
 		Optional<Animation> result = aniRepo.findById(id);
 		if(result.isPresent()) {
 			Animation ani = result.get();
-			return ani;
+			System.out.println("ani : " + ani);
+			EntityModel<Animation> aniModel = EntityModel.of(ani, 
+					WebMvcLinkBuilder.linkTo(AnimationApiController.class).slash(id).withSelfRel(),
+					WebMvcLinkBuilder.linkTo(AnimationApiController.class).slash(id).withRel("updateAni"),
+					WebMvcLinkBuilder.linkTo(AnimationApiController.class).slash(id).withRel("deleteAni"));
+			return aniModel;
 		}
 		return null;
 	}
