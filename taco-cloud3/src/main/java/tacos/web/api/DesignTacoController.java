@@ -48,15 +48,6 @@ public class DesignTacoController {
 //		recentResources.add(linkTo(methodOn(DesignTacoController.class).recentTacos()).withRel("recents")); // 관련 경로 추가
 		return recentResources;
 	}
-	
-	@GetMapping(value = "/recent/{id}") 	
-	public TacoResource recentTacosOne(@PathVariable("id") Long id) {
-		PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
-		log.info("recentTacos");
-		Optional<Taco> optTaco = tacoRepo.findById(id);
-		TacoResource recentResources = new TacoResourceAssembler().toModel(optTaco.get());
-		return recentResources;
-	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {

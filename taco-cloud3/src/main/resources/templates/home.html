@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR">
+<title>Taco Cloud</title>
+</head>
+<body>
+  <h1>Welcome to...</h1>
+  <!-- 
+  		- 타임리프에서 상대경로로 이미지를 참조하는 표현식 @{..}
+  		- 정적인 콘텐츠는 static 폴더에 위치해야 한다.
+   -->
+  <img th:src="@{/images/TacoCloud.png}"/>
+  
+  <form method="POST" th:action="@{/logout}" id="logoutForm">
+	<input type="submit" value="Logout"/>
+  </form>
+  
+  <a th:href="@{/design}" id="design">Design a taco</a>
+</body>
+</html>

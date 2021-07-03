@@ -12,7 +12,6 @@ import tacos.Ingredient;
 import tacos.Taco;
 
 @Getter
-// TacoResource 객체 리스트는 tacos로 TacoResource는 taco로 지정
 @Relation(value = "taco", collectionRelation = "tacos")
 public class TacoResource extends RepresentationModel { // link 객체 리스트와 관리 메소드 상속
 
