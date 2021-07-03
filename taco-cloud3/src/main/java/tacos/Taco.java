@@ -12,10 +12,13 @@ import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.data.rest.core.annotation.RestResource;
+
 import lombok.Data;
 
 @Data
 @Entity // JPA 개체로 선언
+@RestResource(rel = "tacos", path = "tacos") // 경로의 복수형 관련 문제를 해결할 수 있는 애노테이션 (관계 이름과 경로를 원하는 이름으로 지정 가능)
 public class Taco {
 	
 	@Id
