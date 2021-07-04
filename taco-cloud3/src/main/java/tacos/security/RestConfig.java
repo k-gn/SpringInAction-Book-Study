@@ -6,6 +6,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
+import org.springframework.web.client.RestTemplate;
 
 import tacos.Taco;
 
@@ -28,4 +29,9 @@ public class RestConfig {
 			}
 	    };
 	  }
+	
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }
