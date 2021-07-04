@@ -4,16 +4,21 @@ import java.net.URI;
 import java.util.Collection;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import lombok.RequiredArgsConstructor;
 import tacos.Ingredient;
 import tacos.Taco;
 
-@RepositoryRestController
+@RestController
+@RequestMapping("/use")
+@RequiredArgsConstructor
 public class TraversonTest {
 
 	// API 에 하이퍼링크를 포함해야 한다면 RestTemplate 는 도움이 안된다.
@@ -21,10 +26,13 @@ public class TraversonTest {
 	// Traverson 은 스프링 데이터 HATEOAS 와 같이 제공된다.
 	// Traverson 을 사용할 때 먼저 해당 API 의 기본 URI 를 갖는 객체를 생성한다.
 	// base url + hal-json 지정(Traverson이 수신되는 리소스 데이터를 분석하는 방법을 알수 있다)
-	private Traverson traverson = new Traverson(URI.create("http://localohst:8080/api"), MediaTypes.HAL_JSON);
+	private final Traverson traverson;
+	private final RestTemplate rest;
 	
-	@GetMapping("/test/tra")
-	public void traversonTest() {
+	@GetMapping("/tra")
+	public Collection<Taco> traversonTest() {
+		
+		System.out.println("traversonTest");
 		
 		ParameterizedTypeReference<CollectionModel<Ingredient>> ingredientType = new ParameterizedTypeReference<CollectionModel<Ingredient>>() {};
 		ParameterizedTypeReference<CollectionModel<Taco>> tacoType = new ParameterizedTypeReference<CollectionModel<Taco>>() {};
@@ -36,11 +44,25 @@ public class TraversonTest {
 		Collection<Ingredient> ingredients = ingredientRes.getContent();
 		
 		CollectionModel<Taco> tacoRes = traverson
-				.follow("tacos", "recents") 
-//				.follow("tacos") 
-//				.follow("recents") 
+//				.follow("tacos", "recent") 
+				.follow("tacos") 
+//				.follow("recent") 
 				.toObject(tacoType); 
 		
+		System.out.println(rest.getForObject("http://localhost:8080/api/tacos", CollectionModel.class));
+		
 		Collection<Taco> tacos = tacoRes.getContent();
+		return tacos;
+	}
+	
+	@GetMapping("/tralink")
+	public String addIngredient(Ingredient ingredient) {
+		String ingredientUrl = traverson
+				.follow("ingredients")
+				.asLink() // 링크 자체를 요청
+				.getHref(); // 링크의 url 가져오기
+		
+		return ingredientUrl;
+//		return rest.postForObject(ingredientUrl, ingredient, Ingredient.class);
 	}
 }
