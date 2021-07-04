@@ -14,7 +14,7 @@ public class RestConfig {
 
 	@Bean
 	  public RepresentationModelProcessor<PagedModel<EntityModel<Taco>>>
-	    tacoProcessor(EntityLinks links) {
+	    tacoProcessor(EntityLinks links) { // EntityLinks : 경로를 만들어주는 객체
 
 	    return new RepresentationModelProcessor<PagedModel<EntityModel<Taco>>>() {
 
