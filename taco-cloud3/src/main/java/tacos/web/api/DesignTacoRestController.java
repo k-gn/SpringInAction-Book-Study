@@ -19,10 +19,13 @@ import tacos.data.TacoRepository;
 
 @RepositoryRestController
 @RequiredArgsConstructor
-//@RequestMapping("/api")
+@RequestMapping("/api")
 public class DesignTacoRestController {
 
 	private final TacoRepository tacoRepository;
+	
+	@Value("${spring.data.rest.base-path}")
+	private String basePath;
 	
 	@GetMapping(value =  "/tacos/recent", produces = "application/hal+json")
 	public ResponseEntity<CollectionModel<TacoModel>> recentTacos(){
